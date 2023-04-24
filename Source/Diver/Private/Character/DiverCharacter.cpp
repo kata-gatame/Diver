@@ -3,6 +3,7 @@
 #include "Character/DiverCharacter.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "Components/DiveComponent.h"
 #include "Components/InputComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/Controller.h"
@@ -24,13 +25,8 @@ ADiverCharacter::ADiverCharacter()
 	GetCharacterMovement()->bOrientRotationToMovement = true; // Character moves in the direction of input...	
 	GetCharacterMovement()->RotationRate = FRotator(0.0f, 500.0f, 0.0f); // ...at this rotation rate
 
-	// Note: For faster iteration times these variables, and many more, can be tweaked in the Character Blueprint
-	// instead of recompiling to adjust them
-	GetCharacterMovement()->JumpZVelocity = 700.f;
-	GetCharacterMovement()->AirControl = 0.35f;
-	GetCharacterMovement()->MaxWalkSpeed = 500.f;
-	GetCharacterMovement()->MinAnalogWalkSpeed = 20.f;
-	GetCharacterMovement()->BrakingDecelerationWalking = 2000.f;
+	// Create the Diver Actions component
+	DiverActions = CreateDefaultSubobject<UDiveComponent>(TEXT("DiveComponent"));
 
 	// Create a camera boom (pulls in towards the player if there is a collision)
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
@@ -45,6 +41,12 @@ ADiverCharacter::ADiverCharacter()
 
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named ThirdPersonCharacter (to avoid direct content references in C++)
+}
+
+void ADiverCharacter::PostInitializeComponents()
+{
+	Super::PostInitializeComponents();
+	if (DiverActions) DiverActions->Diver = this;
 }
 
 void ADiverCharacter::BeginPlay()
@@ -76,6 +78,12 @@ void ADiverCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInp
 
 		//Looking
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ThisClass::Look);
+
+		//Setting
+		EnhancedInputComponent->BindAction(SetAction, ETriggerEvent::Completed, this, &ThisClass::Set);
+
+		//Diving
+		EnhancedInputComponent->BindAction(DiveAction, ETriggerEvent::Completed, this, &ThisClass::Dive);
 	}
 }
 
@@ -113,4 +121,19 @@ void ADiverCharacter::Look(const FInputActionValue& Value)
 		AddControllerYawInput(LookAxisVector.X);
 		AddControllerPitchInput(LookAxisVector.Y);
 	}
+}
+
+void ADiverCharacter::Set()
+{
+	DiverActions->SetButtonPressed();
+}
+
+void ADiverCharacter::Dive()
+{
+	DiverActions->DiveButtonPressed();
+}
+
+bool ADiverCharacter::IsSet() const
+{
+	return DiverActions && DiverActions->bDiverSet;
 }
