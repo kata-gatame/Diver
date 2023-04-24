@@ -1,1 +1,1 @@
-# DiveGame
+# Diver
