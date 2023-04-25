@@ -1,17 +1,17 @@
 // kata.codes
 
-#include "Components/DiveComponent.h"
+#include "Components/DiverActions.h"
 #include "Character/DiverCharacter.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
-UDiveComponent::UDiveComponent()
+UDiverActions::UDiverActions()
 {
 	PrimaryComponentTick.bCanEverTick = true;
 
 	BaseWalkSpeed = 600.f;
 }
 
-void UDiveComponent::BeginPlay()
+void UDiverActions::BeginPlay()
 {
 	Super::BeginPlay();
 	if (Diver)
@@ -24,28 +24,28 @@ void UDiveComponent::BeginPlay()
 	}
 }
 
-void UDiveComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+void UDiverActions::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 }
 
-void UDiveComponent::SetButtonPressed()
+void UDiverActions::SetButtonPressed()
 {
 	if (Diver) SetDiver(bDiverSet ? false : true);
 }
 
-void UDiveComponent::SetDiver(bool bIsSetting)
+void UDiverActions::SetDiver(bool bIsSetting)
 {
 	Diver->GetCharacterMovement()->SetMovementMode(bIsSetting ? MOVE_None : MOVE_Walking);
 	bDiverSet = bIsSetting;
 }
 
-void UDiveComponent::DiveButtonPressed()
+void UDiverActions::DiveButtonPressed()
 {
 	if (bDiverSet) Dive();
 }
 
-void UDiveComponent::Dive()
+void UDiverActions::Dive()
 {
 	Diver->GetCharacterMovement()->SetMovementMode(MOVE_Walking);
 	bDiverSet = false;

@@ -1,15 +1,14 @@
 // kata.codes
-
 #pragma once
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
-#include "DiveComponent.generated.h"
+#include "DiverActions.generated.h"
 
 class ADiverCharacter;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
-class DIVER_API UDiveComponent : public UActorComponent
+class DIVER_API UDiverActions : public UActorComponent
 {
 	GENERATED_BODY()
 
@@ -30,7 +29,7 @@ protected:
 	void Dive();
 
 public:	
-	UDiveComponent();
+	UDiverActions();
 
 	friend class ADiverCharacter;
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;

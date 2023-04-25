@@ -7,7 +7,7 @@
 #include "DiverCharacter.generated.h"
 
 class UCameraComponent;
-class UDiveComponent;
+class UDiverActions;
 class UInputAction;
 class UInputMappingContext;
 class USpringArmComponent;
@@ -18,7 +18,7 @@ class ADiverCharacter : public ACharacter
 	GENERATED_BODY()
 
 	UPROPERTY(VisibleAnywhere)
-	UDiveComponent* DiverActions;
+	UDiverActions* DiverActions;
 
 	/** Camera boom positioning the camera behind the character */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess = "true"))
@@ -35,10 +35,6 @@ class ADiverCharacter : public ACharacter
 	/** Jump Input Action */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Player Input", meta = (AllowPrivateAccess = "true"))
 	UInputAction* JumpAction;
-
-	/** Look Input Action */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Player Input", meta = (AllowPrivateAccess = "true"))
-	UInputAction* LookAction;
 
 	/** Move Input Action */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Player Input", meta = (AllowPrivateAccess = "true"))
@@ -77,8 +73,6 @@ public:
 
 	bool IsSet() const;
 
-	/** Returns CameraBoom subobject **/
 	FORCEINLINE USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
-	/** Returns FollowCamera subobject **/
 	FORCEINLINE UCameraComponent* GetFollowCamera() const { return FollowCamera; }
 };
